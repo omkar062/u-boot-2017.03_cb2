@@ -28,5 +28,25 @@
 #include <configs/sunxi-common.h>
 
 #define CONFIG_MACH_TYPE	(4283 | ((CONFIG_MACH_TYPE_COMPAT_REV) << 28))
-
+#ifdef CONFIG_NAND_SUNXI
+#define CONFIG_MTD
+#define CONFIG_CMD_NAND
+#define CONFIG_MTD_DEVICE
+#define CONFIG_CMD_MTDPARTS
+#define CONFIG_MTD_PARTITIONS
+#define MTDIDS_DEFAULT		"nand0=sun7i_nand.0"
+#define MTDPARTS_DEFAULT                "mtdparts=sun7i_nand.0:" \
+					"2048k(SPL)," \
+					"2m(UBOOT)," \
+					"2m(UBOOT_ENV)," \
+					"2m(DTB)," \
+					"10m(KERNEL)," \
+					"1g(ROOTFS)," \
+					"-(NAND.reserved)"
+#if 0
+//#define CONFIG_LZO
+//#define CONFIG_RBTREE
+//#define CONFIG_CMD_UBIFS
+#endif
+#endif
 #endif /* __CONFIG_H */

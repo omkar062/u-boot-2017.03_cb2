@@ -50,7 +50,16 @@ _start:
 #ifdef CONFIG_SYS_DV_NOR_BOOT_CFG
 	.word	CONFIG_SYS_DV_NOR_BOOT_CFG
 #endif
-
+#ifdef CONFIG_SPL_BUILD
+	b	reset
+	ldr	pc, =_undefined_instruction
+	ldr	pc, =_software_interrupt
+	ldr	pc, =_prefetch_abort
+	ldr	pc, =_data_abort
+	ldr	pc, =_not_used
+	ldr	pc, =_irq
+	ldr	pc, =_fiq
+#else
 	b	reset
 	ldr	pc, _undefined_instruction
 	ldr	pc, _software_interrupt
@@ -59,6 +68,7 @@ _start:
 	ldr	pc, _not_used
 	ldr	pc, _irq
 	ldr	pc, _fiq
+#endif
 
 #ifdef CONFIG_ENABLE_ARM_SOC_BOOT0_HOOK
 /*
@@ -79,6 +89,8 @@ _start:
  *************************************************************************
  */
 
+#ifdef CONFIG_SPL_BUILD
+/*
 	.globl	_undefined_instruction
 	.globl	_software_interrupt
 	.globl	_prefetch_abort
@@ -96,7 +108,26 @@ _irq:			.word irq
 _fiq:			.word fiq
 
 	.balignl 16,0xdeadbeef
+*/
+#else
+	.globl	_undefined_instruction
+	.globl	_software_interrupt
+	.globl	_prefetch_abort
+	.globl	_data_abort
+	.globl	_not_used
+	.globl	_irq
+	.globl	_fiq
 
+_undefined_instruction:	.word undefined_instruction
+_software_interrupt:	.word software_interrupt
+_prefetch_abort:	.word prefetch_abort
+_data_abort:		.word data_abort
+_not_used:		.word not_used
+_irq:			.word irq
+_fiq:			.word fiq
+
+	.balignl 16,0xdeadbeef
+#endif
 /*
  *************************************************************************
  *
@@ -109,6 +140,16 @@ _fiq:			.word fiq
 
 #ifdef CONFIG_SPL_BUILD
 
+#ifdef CONFIG_SPL_BUILD
+//	.align	5
+_undefined_instruction:
+_software_interrupt:
+_prefetch_abort:
+_data_abort:
+_not_used:
+_irq:
+_fiq:
+#else
 	.align	5
 undefined_instruction:
 software_interrupt:
@@ -117,7 +158,7 @@ data_abort:
 not_used:
 irq:
 fiq:
-
+#endif
 1:
 	bl	1b			/* hang and never return */
 

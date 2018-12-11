@@ -21,13 +21,21 @@ void clock_init_safe(void)
 {
 	struct sunxi_ccm_reg * const ccm =
 		(struct sunxi_ccm_reg *)SUNXI_CCM_BASE;
-
+/*
+writel(0x11111111,(void *)0x01C20890);
+writel(0x11111111,(void *)0x01C20894);
+writel(0x11111111,(void *)0x01C20898);
+writel(0x11111111,(void *)0x01C2089c);
+writel(0xFFFFFFFF,(void *)0x01C208a0);
+*/
+#if 1
 	/* Set safe defaults until PMU is configured */
 	writel(AXI_DIV_1 << AXI_DIV_SHIFT |
 	       AHB_DIV_2 << AHB_DIV_SHIFT |
 	       APB0_DIV_1 << APB0_DIV_SHIFT |
 	       CPU_CLK_SRC_OSC24M << CPU_CLK_SRC_SHIFT,
 	       &ccm->cpu_ahb_apb0_cfg);
+#endif
 	writel(PLL1_CFG_DEFAULT, &ccm->pll1_cfg);
 	sdelay(200);
 	writel(AXI_DIV_1 << AXI_DIV_SHIFT |
@@ -35,13 +43,14 @@ void clock_init_safe(void)
 	       APB0_DIV_1 << APB0_DIV_SHIFT |
 	       CPU_CLK_SRC_PLL1 << CPU_CLK_SRC_SHIFT,
 	       &ccm->cpu_ahb_apb0_cfg);
+
 #ifdef CONFIG_MACH_SUN7I
 	setbits_le32(&ccm->ahb_gate0, 0x1 << AHB_GATE_OFFSET_DMA);
 #endif
 	writel(PLL6_CFG_DEFAULT, &ccm->pll6_cfg);
 #ifdef CONFIG_SUNXI_AHCI
-	setbits_le32(&ccm->ahb_gate0, 0x1 << AHB_GATE_OFFSET_SATA);
-	setbits_le32(&ccm->pll6_cfg, 0x1 << CCM_PLL6_CTRL_SATA_EN_SHIFT);
+//	setbits_le32(&ccm->ahb_gate0, 0x1 << AHB_GATE_OFFSET_SATA);
+//	setbits_le32(&ccm->pll6_cfg, 0x1 << CCM_PLL6_CTRL_SATA_EN_SHIFT);
 #endif
 }
 #endif

@@ -36,6 +36,27 @@
 #endif
 
 reset:
+	ldr r1, =0x01C20890
+        ldr r2, =#0x11111111
+        str r2, [r1]
+        dmb sy
+        ldr r1, =0x01C20894
+        ldr r2, =#0x11111111
+        str r2, [r1]
+        dmb sy
+        ldr r1, =0x01C20898
+        ldr r2, =#0x11111111
+        str r2, [r1]
+        dmb sy
+        ldr r1, =0x01C2089C
+        ldr r2, =#0x11111111
+        str r2, [r1]
+        dmb sy
+        ldr r1,=0x01C208A0
+        ldr r2, =#0xFFFFFFFF
+        str r2, [r1]
+        dmb sy
+
 	/* Allow the board to save important registers */
 	b	save_boot_params
 save_boot_params_ret:
